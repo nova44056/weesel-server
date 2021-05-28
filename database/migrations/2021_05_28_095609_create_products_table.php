@@ -18,8 +18,9 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->string('description', 1000);
             $table->integer('quantity');
-            $table->discount('discount')->default(0);
+            $table->integer('discount')->default(0);
             $table->bigInteger('seller_id')->unsigned();
+            $table->boolean('status');
             $table->timestamps();
 
             $table->foreign('seller_id')->references('id')->on('users');
