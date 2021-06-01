@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,13 +21,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
-Route::get('refresh', [AuthController::class, 'refresh']);
-
-Route::group(['middleware' => ['jwt.verify']], function () {
-    Route::get('user', [AuthController::class, 'getAuthenticatedUser']);
-    Route::post('logout', [AuthController::class, 'logout']);
+Route::group([
+    "prefix" => "auth"
+], function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+    Route::get('refresh', [AuthController::class, 'refresh']);
+    Route::group(['middleware' => ['jwt.verify']], function () {
+        Route::get('user', [AuthController::class, 'getAuthenticatedUser']);
+        Route::get('logout', [AuthController::class, 'logout']);
+    });
 });
 
-Route::get('users', [UserController::class, 'index']);
+Route::get('products', [ProductController::class, 'index']);
