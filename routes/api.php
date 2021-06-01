@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,3 +28,5 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('user', [AuthController::class, 'getAuthenticatedUser']);
     Route::post('logout', [AuthController::class, 'logout']);
 });
+
+Route::get('users', [UserController::class, 'index']);

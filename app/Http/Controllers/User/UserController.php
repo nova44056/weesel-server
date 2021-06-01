@@ -32,9 +32,14 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|required'
+            'email' => 'required|email',
+            'password' => 'required|min:6|confirmed'
         ]);
+
+        $user = User::create($request->all());
+        return response()->json([
+            'data' => $user
+        ], 200);
     }
 
     /**
@@ -45,18 +50,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
+        return response()->json([
+            'data' => $user
+        ], 200);
     }
 
     /**
@@ -68,7 +64,14 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+
+        $user->save();
+        return response()->json([
+            'data' => $user
+        ], 200);
     }
 
     /**
@@ -79,6 +82,9 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return response()->json([
+            'data' => $user
+        ], 200);
     }
 }
