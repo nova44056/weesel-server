@@ -15,17 +15,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $users = User::all();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json([
+            'data' => $users
+        ], 200);
     }
 
     /**
@@ -36,7 +30,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6|required'
+        ]);
     }
 
     /**

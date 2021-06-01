@@ -15,17 +15,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $products = Product::all();
+        return response()->json([
+            'data' => $products
+        ], 200);
     }
 
     /**
@@ -36,7 +29,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
