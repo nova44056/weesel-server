@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\Category\CategoryProductController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
@@ -33,4 +35,9 @@ Route::group([
     });
 });
 
-Route::get('products', [ProductController::class, 'index']);
+Route::get('users', [UserController::class, 'index']);
+
+// Route::get('products', [ProductController::class, 'index']);
+Route::resource('products', ProductController::class);
+Route::resource('categories', CategoryController::class);
+Route::resource('categories.products', CategoryProductController::class)->only(['index']);

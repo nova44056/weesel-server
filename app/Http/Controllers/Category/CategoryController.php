@@ -15,17 +15,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $categories = Category::all();
+        return response()->json([
+            'data' => $categories
+        ], 200);
     }
 
     /**
@@ -36,7 +29,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'description' => 'required|string|max:1000'
+        ]);
+        $category = Category::create($request->all());
+
+        return response()->json([
+            'data' => $category
+        ], 200);
     }
 
     /**
@@ -47,7 +48,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return response()->json([
+            'data' => $category
+        ], 200);
     }
 
     /**

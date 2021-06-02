@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -26,7 +27,15 @@ class DatabaseSeeder extends Seeder
         DB::table('category_product')->truncate();
         // \App\Models\User::factory(10)->create();
 
-        User::factory(100)->create();
-        Product::factory(10)->create();
+        User::factory(1000)->create();
+        Product::factory(100)->create();
+        Category::factory(10)->create();
+
+        $categories = Category::all();
+        Product::all()->each(function ($product) use ($categories) {
+            $product->categories()->attach(
+                $categories->random(rand(1, 10))->pluck('id')->toArray()
+            );
+        });
     }
 }
