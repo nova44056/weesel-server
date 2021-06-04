@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Category\CategoryChildrenController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Category\CategoryProductController;
 use App\Http\Controllers\Product\ProductController;
@@ -41,3 +42,4 @@ Route::get('users', [UserController::class, 'index']);
 Route::resource('products', ProductController::class);
 Route::resource('categories', CategoryController::class);
 Route::resource('categories.products', CategoryProductController::class)->only(['index']);
+Route::resource('categories.children', CategoryChildrenController::class)->only(['index']);

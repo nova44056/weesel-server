@@ -15,7 +15,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::with('children')->where('parent_id', '=', null)->get();
         return response()->json([
             'data' => $categories
         ], 200);
@@ -31,7 +31,8 @@ class CategoryController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'description' => 'required|string|max:1000'
+            'description' => 'required|string|max:1000',
+            'parent_id' => 'nullable|integer'
         ]);
         $category = Category::create($request->all());
 

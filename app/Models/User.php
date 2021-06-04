@@ -17,8 +17,9 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    public const REGULAR_USER = 0;
-    public const ADMIN_USER = 1;
+    public const BUYER = "buyer";
+    public const SELLER = "seller";
+    public const roles = [User::BUYER, User::SELLER];
 
     protected $fillable = [
         'name',

@@ -13,10 +13,12 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $users = User::all();
-
+        if ($role = $request->query('role') and in_array($request->query('role'), User::roles)) {
+            $users = User::where('role', '=', $role)->get();
+        }
         return response()->json([
             'data' => $users
         ], 200);

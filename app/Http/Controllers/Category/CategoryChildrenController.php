@@ -1,20 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Seller;
+namespace App\Http\Controllers\Category;
 
 use App\Http\Controllers\Controller;
-use App\Models\Seller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
-class SellerController extends Controller
+class CategoryChildrenController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Category $category)
     {
+        $children = $category->children;
+
+        return response()->json([
+            'data' => $children
+        ], 200);
     }
 
     /**
@@ -41,10 +46,10 @@ class SellerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Seller  $seller
+     * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Seller $seller)
+    public function show(Category $category)
     {
         //
     }
@@ -52,10 +57,10 @@ class SellerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Seller  $seller
+     * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Seller $seller)
+    public function edit(Category $category)
     {
         //
     }
@@ -64,10 +69,10 @@ class SellerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Seller  $seller
+     * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Seller $seller)
+    public function update(Request $request, Category $category)
     {
         //
     }
@@ -75,10 +80,10 @@ class SellerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Seller  $seller
+     * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Seller $seller)
+    public function destroy(Category $category)
     {
         //
     }

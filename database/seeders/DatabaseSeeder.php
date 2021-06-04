@@ -28,14 +28,14 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         User::factory(1000)->create();
-        Product::factory(100)->create();
-        Category::factory(10)->create();
+        // Product::factory(100)->create();
+        // Category::factory(10)->create();
 
-        $categories = Category::all();
-        Product::all()->each(function ($product) use ($categories) {
-            $product->categories()->attach(
-                $categories->random(rand(1, 10))->pluck('id')->toArray()
-            );
-        });
+        // $categories = Category::all();
+        // Product::all()->each(function ($product) use ($categories) {
+        //     $product->categories()->attach(
+        //         $categories->random(rand(1, 10))->pluck('id')->toArray()
+        //     );
+        // });
     }
 }
