@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-    public const AVAILABLE_PRODUCT = true;
-    public const UNAVAILABLE_PRODUCT = false;
+    public const AVAILABLE_PRODUCT = "available";
+    public const UNAVAILABLE_PRODUCT = "unavailable";
     public static $productStatus = [self::AVAILABLE_PRODUCT, self::UNAVAILABLE_PRODUCT];
     protected $fillable = [
         'name',

@@ -15,7 +15,10 @@ class CategoryParentController extends Controller
      */
     public function index()
     {
-        //
+        $parents = Category::where('parent_id', '=', null)->get();
+        return response()->json([
+            'data' => $parents
+        ], 200);
     }
 
     /**

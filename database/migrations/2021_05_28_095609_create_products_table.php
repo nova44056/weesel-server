@@ -21,7 +21,7 @@ class CreateProductsTable extends Migration
             $table->integer('quantity');
             $table->integer('discount')->default(0);
             $table->bigInteger('seller_id')->unsigned();
-            $table->boolean('status')->default(Product::UNAVAILABLE_PRODUCT);
+            $table->string('status')->default(Product::UNAVAILABLE_PRODUCT);
             $table->timestamps();
             $table->foreign('seller_id')->references('id')->on('users');
         });

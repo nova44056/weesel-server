@@ -13,9 +13,11 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $categories = Category::with('children')->where('parent_id', '=', null)->get();
+        if ($request->query('show') && $request->query('show') == 'parent_only')
+            $categories = Category::where('parent_id', '=', null)->get();
         return response()->json([
             'data' => $categories
         ], 200);
@@ -55,17 +57,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Category $category)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -74,7 +65,28 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $this->validate($request, [
+            'name' => 'string|nullable',
+            'description' => 'string|max:1000|nullable',
+            'parent_id' => 'nullable|integer'
+        ]);
+
+        if ($request->has('name'))
+            $category->name = $request->name;
+        if ($request->has('description'))
+            $category->description = $request->description;
+        if ($request->has('parent_id'))
+            $category->parent_id = $request->parent_id;
+
+        if (!$category->isDirty())
+            return response()->json([
+                'error' => 'You need to specify a different value to update'
+            ], 422);
+
+        $category->save();
+        return response()->json([
+            'data' => $category
+        ], 200);
     }
 
     /**
