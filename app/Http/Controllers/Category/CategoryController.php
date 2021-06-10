@@ -5,9 +5,20 @@ namespace App\Http\Controllers\Category;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('optimizeImages')->only('store');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -34,9 +45,17 @@ class CategoryController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'description' => 'required|string|max:1000',
-            'parent_id' => 'nullable|integer'
+            'parent_id' => 'nullable|integer',
+            'image' => 'file|nullable'
         ]);
-        $category = Category::create($request->all());
+        $image_path = $request->file('image')->store('category', 's3');
+        Storage::disk('s3')->setVisibility($image_path, 'public');
+        $category = Category::create([
+            'name' => $request->get('name'),
+            'description' => $request->get('description'),
+            'parent_id' => $request->get('id'),
+            'image_url' => Storage::disk('s3')->url($image_path)
+        ]);
 
         return response()->json([
             'data' => $category

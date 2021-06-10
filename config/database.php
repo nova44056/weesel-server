@@ -2,6 +2,12 @@
 
 use Illuminate\Support\Str;
 
+// define('RDS_HOSTNAME', $_SERVER['RDS_HOSTNAME']);
+// define('RDS_USERNAME', $_SERVER['RDS_USERNAME']);
+// define('RDS_PASSWORD', $_SERVER['RDS_PASSWORD']);
+// define('RDS_DB_NAME', $_SERVER['RDS_DB_NAME']);
+
+
 return [
 
     /*
@@ -47,10 +53,14 @@ return [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
+            // 'host' => RDS_HOSTNAME,
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'forge'),
+            // 'database' => RDS_DB_NAME,
             'username' => env('DB_USERNAME', 'forge'),
+            // 'username' => RDS_USERNAME,
             'password' => env('DB_PASSWORD', ''),
+            // 'password' => RDS_PASSWORD,
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -123,7 +133,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [
