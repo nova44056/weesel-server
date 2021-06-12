@@ -16,8 +16,10 @@ class Product extends Model
         'description',
         'seller_id',
         'quantity',
-        'status'
+        'status',
     ];
+    protected $hidden = ['pivot'];
+
     public function transactions()
     {
         return $this->hasMany(Transaction::class);

@@ -57,7 +57,7 @@ class ProductController extends Controller
                 Storage::disk('s3')->setVisibility($image_path, 'public');
                 ProductImage::create([
                     'product_id' => $newProduct->id,
-                    'image_url' => Storage::disk('s3')->url($image_path)
+                    'url' => Storage::disk('s3')->url($image_path)
                 ]);
             }
         }
@@ -75,7 +75,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return response()->json([
-            'data' => $product
+            'data' => $product->with('images')->with('categories:id,name')->where('id', '=', $product->id)->get()->first()
         ], 200);
     }
 

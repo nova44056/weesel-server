@@ -16,9 +16,11 @@ class Category extends Model
         'image_url'
     ];
 
+    protected $hidden = ['pivot'];
+
     public function products()
     {
-        return $this->belongsToMany(Product::class);
+        return $this->belongsToMany(Product::class)->with(['categories:id,name', 'images']);
     }
 
     public function parent()

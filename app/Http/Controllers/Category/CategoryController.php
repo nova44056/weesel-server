@@ -44,17 +44,17 @@ class CategoryController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'description' => 'required|string|max:1000',
             'parent_id' => 'nullable|integer',
             'image' => 'file|nullable'
         ]);
-        $image_path = $request->file('image')->store('category', 's3');
-        Storage::disk('s3')->setVisibility($image_path, 'public');
+        if ($request->image) {
+            $image_path = $request->file('image')->store('category', 's3');
+            Storage::disk('s3')->setVisibility($image_path, 'public');
+        }
         $category = Category::create([
             'name' => $request->get('name'),
-            'description' => $request->get('description'),
-            'parent_id' => $request->get('id'),
-            'image_url' => Storage::disk('s3')->url($image_path)
+            'parent_id' => $request->get('parent_id'),
+            'image_url' => $request->image ? Storage::disk('s3')->url($image_path) : null
         ]);
 
         return response()->json([
@@ -86,14 +86,11 @@ class CategoryController extends Controller
     {
         $this->validate($request, [
             'name' => 'string|nullable',
-            'description' => 'string|max:1000|nullable',
             'parent_id' => 'nullable|integer'
         ]);
 
         if ($request->has('name'))
             $category->name = $request->name;
-        if ($request->has('description'))
-            $category->description = $request->description;
         if ($request->has('parent_id'))
             $category->parent_id = $request->parent_id;
 
