@@ -27,9 +27,9 @@ class DatabaseSeeder extends Seeder
         DB::table('category_product')->truncate();
         // \App\Models\User::factory(10)->create();
 
-        User::factory(1000)->create();
-        // Product::factory(100)->create();
+        User::factory(20)->create();
         // Category::factory(10)->create();
+        // Product::factory(100)->create();
 
         // $categories = Category::all();
         // Product::all()->each(function ($product) use ($categories) {

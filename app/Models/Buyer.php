@@ -12,4 +12,9 @@ class Buyer extends User
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

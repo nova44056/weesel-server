@@ -113,6 +113,16 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        // check if the parent_id of category is null or not
+        // delete all category children if it has a parent_id of null
+        if (!$category->parent_id) {
+            Category::where('parent_id', '=', $category->id)->delete();
+        }
+        // delete category
+        $category->delete();
+        return response()->json([
+            'message' => 'Deleted successfully.',
+            'data' => $category
+        ], 200);
     }
 }
