@@ -28,7 +28,7 @@ class ProductFactory extends Factory
             'quantity' => $this->faker->numberBetween(1, 10),
             'discount' => 0,
             'status' => $this->faker->randomElement([Product::AVAILABLE_PRODUCT, Product::UNAVAILABLE_PRODUCT]),
-            'seller_id' => User::all()->where('role', '=', 1)->random()->id
+            'seller_id' => User::all()->where('role', '=', User::BUYER)->random()->id
         ];
     }
 }

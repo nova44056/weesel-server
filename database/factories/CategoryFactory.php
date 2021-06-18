@@ -23,7 +23,8 @@ class CategoryFactory extends Factory
     {
         return [
             'name' => $this->faker->word(),
-            'description' => $this->faker->paragraph(1)
+            'description' => $this->faker->paragraph(1),
+            'parent_id' => $this->faker->randomElement([null, Category::all()->where('parent_id', '=', User::BUYER)->random()->id])
         ];
     }
 }

@@ -110,10 +110,11 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $product->categories()->detach();
         $product->delete();
         return response()->json([
-            'data' => $product,
-            'success' => 'Product has been deleted successfully'
+            'success' => 'Product has been deleted successfully',
+            'data' => $product
         ], 200);
     }
 }
