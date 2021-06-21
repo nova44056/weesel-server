@@ -118,6 +118,7 @@ class CategoryController extends Controller
         if (!$category->parent_id) {
             Category::where('parent_id', '=', $category->id)->delete();
         }
+        $category->products()->delete();
         // delete category
         $category->delete();
         return response()->json([
