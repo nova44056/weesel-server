@@ -37,6 +37,8 @@ class ProductController extends Controller
             'description' => 'required|string',
             'quantity' => 'required|integer|min:0',
             'seller_id' => 'required|integer',
+            'price' => 'required|float',
+            'rating' => 'required|integer',
             'status' => Rule::in(Product::$productStatus),
             'category_ids' => 'required|array|min:1',
             // 'images' => 'array|file|nullable'
@@ -44,6 +46,8 @@ class ProductController extends Controller
         $data = $request->only([
             'name',
             'description',
+            'rating',
+            'price',
             'quantity',
             'seller_id',
             'status'

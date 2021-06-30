@@ -16,6 +16,8 @@ class Product extends Model
         'description',
         'seller_id',
         'quantity',
+        'price',
+        'rating',
         'status',
     ];
     protected $hidden = ['pivot'];
