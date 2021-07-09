@@ -16,11 +16,17 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('images')->get();
+        $products = Product::with('images');
+        if ($request->query('name')) {
+            $products = $products->where('name', 'LIKE', '%' . $request->query('name') . '%');
+        }
+        if ($request->query('category') && $request->query('category') != 'all') {
+            $products = $products->where('category', '=', $request->query('category'));
+        }
         return response()->json([
-            'data' => $products
+            'data' => $products->get()
         ], 200);
     }
 

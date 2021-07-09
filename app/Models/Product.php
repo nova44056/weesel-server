@@ -22,10 +22,7 @@ class Product extends Model
     ];
     protected $hidden = ['pivot'];
 
-    public function transactions()
-    {
-        return $this->hasMany(Transaction::class);
-    }
+
     public function seller()
     {
         return $this->belongsTo(Seller::class);

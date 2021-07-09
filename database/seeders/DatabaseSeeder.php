@@ -27,9 +27,10 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->truncate();
         DB::table('categories')->truncate();
         DB::table('products')->truncate();
-        DB::table('transactions')->truncate();
         DB::table('category_product')->truncate();
         DB::table('product_product_collection')->truncate();
+        DB::table('order_product')->truncate();
+        DB::table('orders')->truncate();
 
         // \App\Models\User::factory(10)->create();
 
