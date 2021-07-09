@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
         Category::insert(CategoryFactory::bakeryChildren);
         Category::insert(CategoryFactory::beverageChildren);
         Category::insert(CategoryFactory::fruitChildren);
-        Product::factory(500)->create();
+        Product::factory(1000)->create();
         Product::all()->each(function ($product) {
             $parentCategories =
                 Category::where('parent_id', '=', null)->get()->random(1)->pluck('id');
@@ -57,6 +57,11 @@ class DatabaseSeeder extends Seeder
                     'url' => 'https://weesel.s3.ap-southeast-1.amazonaws.com/category/placeholder-square.jpg'
                 ]);
             }
+        });
+
+        Product::all()->random(100)->each(function ($product) {
+            $product->discount = rand(10, 20);
+            $product->save();
         });
 
         ProductCollection::all()->each(function ($productCollection) {
