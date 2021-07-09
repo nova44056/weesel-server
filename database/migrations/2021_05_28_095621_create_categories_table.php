@@ -18,7 +18,9 @@ class CreateCategoriesTable extends Migration
             $table->string('name');
             $table->string('image_url')->nullable();
             $table->bigInteger('parent_id')->unsigned()->nullable();
+            // $table->bigInteger("category_collection_id")->unsigned()->nullable();
             $table->timestamps();
+            // $table->foreign("category_collection_id")->references("id")->on("category_collections")->onDelete("set null");
         });
     }
 

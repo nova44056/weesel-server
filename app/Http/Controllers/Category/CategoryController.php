@@ -70,6 +70,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        $children = $category->children()->get();
+        $category['children'] = $children;
         return response()->json([
             'data' => $category
         ], 200);
