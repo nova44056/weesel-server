@@ -67,6 +67,11 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'phone_number' => 'required|string',
+            'address_1' => 'required|string',
+            'address_2' => 'nullable|string',
+            'city' => 'string|required',
+            'district' => 'string|required'
         ]);
 
         if ($validator->fails()) {
@@ -77,6 +82,11 @@ class AuthController extends Controller
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
+            'phone_number' =>  $request->get('phone_number'),
+            'address_1' =>  $request->get('address_1'),
+            'address_2' =>  $request->get('address_2'),
+            'city' =>  $request->get('city'),
+            'district' =>  $request->get('district')
         ]);
 
         return response()->json([

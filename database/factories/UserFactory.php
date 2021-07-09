@@ -27,7 +27,11 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => bcrypt('123'),
+            'phone_number' => $this->faker->randomElement([$this->faker->numerify('0#########'), $this->faker->numerify('0########')]),
             'remember_token' => Str::random(10),
+            'address_1' => $this->faker->address(),
+            'city' => 'Phnom Penh',
+            'district' => $this->faker->randomElement(['chamkar-mon', 'daun-penh', 'prampir-makara', 'toul-kork', 'dangkao', 'mean-chey', 'russey-keo', 'sen-sok', 'pou-senchey', 'prek-pnov', 'chbar-ampov', 'boeng-keng-kang', 'kamboul']),
             'role' => $this->faker->randomElement([User::BUYER, User::SELLER])
         ];
     }
