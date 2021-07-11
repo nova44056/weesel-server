@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Category\CategoryChildrenController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Category\CategoryProductController;
@@ -23,20 +23,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::group([
-    "prefix" => "auth"
-], function () {
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
-    Route::get('refresh', [AuthController::class, 'refresh']);
-    Route::group(['middleware' => ['jwt.verify']], function () {
-        Route::get('user', [AuthController::class, 'getAuthenticatedUser']);
-        Route::get('logout', [AuthController::class, 'logout']);
-    });
+Route::prefix('auth')->group(function () {
+    Route::post("register", [AuthController::class, 'register']);
+    Route::post("login", [AuthController::class, "login"]);
+    Route::post("logout", [AuthController::class, "logout"])->middleware(["auth:api"]);
+    Route::get("me", [AuthController::class, "me"])->middleware(["auth:api"]);
 });
 
 Route::resource("users", UserController::class)->only(['show']);
