@@ -2,27 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 // use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles;
+
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    public const BUYER = "buyer";
-    public const SELLER = "seller";
-    public const roles = [User::BUYER, User::SELLER];
-
     protected $fillable = [
         'name',
         'email',
@@ -52,15 +49,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    // public function getJWTIdentifier()
-    // {
-    //     return $this->getKey();
-    // }
-    // public function getJWTCustomClaims()
-    // {
-    //     return [];
-    // }
 
     public function orders()
     {

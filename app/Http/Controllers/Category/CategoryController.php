@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Category;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
@@ -26,9 +27,14 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::with('children')->where('parent_id', '=', null)->get();
-        if ($request->query('show') && $request->query('show') == 'parent_only')
-            $categories = Category::where('parent_id', '=', null)->get();
+        if ($request->query('parent_id')) {
+            $categories = Category::where('parent_id', '=', $request->query('parent_id'));
+        } else {
+            $categories = Category::where('parent_id', '=', null);
+        }
+        if ($request->query('include') && $request->query('include') == 'children')
+            $categories = $categories->with('children');
+        $categories = $categories->get();
         return response()->json([
             'data' => $categories
         ], 200);
@@ -42,6 +48,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        abort_if(Gate::denies("category_create"), 403, "Unauthorized");
         $this->validate($request, [
             'name' => 'required',
             'parent_id' => 'nullable|integer',
@@ -70,8 +77,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $children = $category->children()->get();
-        $category['children'] = $children;
+        $category['children'] = $category->children()->get();
         return response()->json([
             'data' => $category
         ], 200);
@@ -86,6 +92,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        abort_if(Gate::denies("category_update"), 403, "Unauthorized");
         $this->validate($request, [
             'name' => 'string|nullable',
             'parent_id' => 'nullable|integer'
@@ -115,6 +122,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        abort_if(Gate::denies("category_delete"), 403, "Unauthorized");
         // check if the parent_id of category is null or not
         // delete all category children if it has a parent_id of null
         if (!$category->parent_id) {

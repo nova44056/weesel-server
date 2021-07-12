@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -18,6 +19,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+
         $products = Product::with('images');
         if ($request->query('name')) {
             $products = $products->where('name', 'LIKE', '%' . $request->query('name') . '%');
@@ -38,6 +40,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        abort_if(Gate::denies("product_create"), 403, "Unauthorized");
+
         $this->validate($request, [
             'name' => 'required|string',
             'description' => 'required|string',
@@ -84,6 +88,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+
         return response()->json([
             'data' => $product->with('images')->with('categories:id,name')->where('id', '=', $product->id)->get()->first()
         ], 200);
@@ -120,6 +125,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        abort_if(Gate::denies("product_delete"), 403, "Unauthorized");
         $product->categories()->detach();
         $product->delete();
         return response()->json([

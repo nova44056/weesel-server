@@ -23,7 +23,8 @@ class AuthController extends Controller
         ]);
         $newUserData['password'] = bcrypt($newUserData['password']);
         $newUser = User::create($newUserData);
-        $accessToken  = $newUser->createToken('authToken')->accessToken;
+        $newUser->assignRole('buyer');
+        $accessToken  = $newUser->createToken('buyerToken')->accessToken;
         return response()->json([
             'user' => $newUser,
             'access_token' => $accessToken
@@ -37,7 +38,8 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
         if (auth()->attempt($loginData)) {
-            $accessToken = auth()->user()->createToken("authToken")->accessToken;
+            abort_if($request->user()->roles()->first()->name !== "buyer", 40);
+            $accessToken = auth()->user()->createToken("buyerToken")->accessToken;
             return response()->json([
                 "user" => auth()->user(),
                 "access_token" => $accessToken
@@ -45,12 +47,13 @@ class AuthController extends Controller
         } else {
             return response()->json([
                 "error" => "Wrong login credentials"
-            ]);
+            ], 500);
         }
     }
 
     public function logout(Request $request)
     {
+        abort_if($request->user()->roles()->first()->name !== "buyer", 403);
         $token = $request->user()->token();
         $token->revoke();
 
@@ -62,8 +65,16 @@ class AuthController extends Controller
 
     public function me()
     {
+        $me = auth()->user();
+        $me['role'] = auth()->user()->roles[0];
         return response()->json([
-            'me' => auth()->user(),
+            'me' => $me,
+            'access_token' => auth()->user()->token()
         ]);
+    }
+
+
+    public function adminLogin()
+    {
     }
 }

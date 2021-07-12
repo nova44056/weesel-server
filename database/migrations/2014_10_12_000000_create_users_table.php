@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             $table->string("address_2")->nullable();
             $table->string("city");
             $table->string("district");
-            $table->string('role')->default(User::BUYER);
+            $table->string("role");
             $table->rememberToken();
             $table->timestamps();
         });

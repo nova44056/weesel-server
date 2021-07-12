@@ -7,10 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Buyer extends User
 {
-    use HasFactory;
-
-    public function products()
+    protected $table = 'users';
+    public function orders()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Order::class)->with("products");
     }
 }

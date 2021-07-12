@@ -1,20 +1,44 @@
 <?php
 
-namespace App\Http\Controllers\Category;
+namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
+use App\Models\Seller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class CategoryCollectionController extends Controller
+class SellerOrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, Seller $seller)
     {
-        //
+        // $orders = $seller->orders()->get();
+        $orders =
+            $seller->orders();
+
+        if ($request->query("date")) {
+            switch ($request->query("date")) {
+                case "today":
+                    $orders = $orders->whereDate('created_at', Carbon::today());
+                    break;
+                case "this week":
+                    $orders = $orders->whereDate('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+                    break;
+            }
+        }
+
+        $orders = $orders->get();
+        foreach ($orders as $order) {
+            $products = $order->products()->where('seller_id', $seller->id)->get();
+            $order['products'] = $products;
+        }
+        return [
+            'data' => $orders
+        ];
     }
 
     /**
