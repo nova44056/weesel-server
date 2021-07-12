@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Order;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -17,16 +18,16 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        abort_if(Gate::denies("order_create"), 403);
-        if ($request->get("user_id")) {
+        // abort_if(Gate::denies("order_create"), 403);
+        if ($request->get("buyer_id")) {
             $this->validate($request, [
                 'payment_method' => 'required|string',
                 'products' => 'required|array|min:1',
             ]);
             $data = $request->only([
-                'user_id'
+                'buyer_id'
             ]);
-            $user = User::find($request->get("user_id"));
+            $user = User::find($request->get("buyer_id"));
             $data['name'] = $user->name;
             $data['email'] = $user->email;
             $data['phone_number'] =
@@ -63,8 +64,9 @@ class OrderController extends Controller
 
         $order = Order::create($data);
         $seller_ids = [];
-        foreach ($request->get('products') as $product) {
-            $order->products()->attach($product["id"], ['quantity' => $product["quantity"]]);
+        foreach ($request->get('products') as $product_id) {
+            $product = Product::where('id', $product_id)->first();
+            $order->products()->attach($product["id"], ['order_product_quantity' => $product["quantity"]]);
             array_push($seller_ids, $product["seller_id"]);
         }
 

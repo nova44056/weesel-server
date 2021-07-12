@@ -46,12 +46,10 @@ class ProductController extends Controller
             'name' => 'required|string',
             'description' => 'required|string',
             'quantity' => 'required|integer|min:0',
-            'seller_id' => 'required|integer',
             'price' => 'required|float',
             'rating' => 'required|integer',
             'status' => Rule::in(Product::$productStatus),
             'category_ids' => 'required|array|min:1',
-            // 'images' => 'array|file|nullable'
         ]);
         $data = $request->only([
             'name',
@@ -59,10 +57,10 @@ class ProductController extends Controller
             'rating',
             'price',
             'quantity',
-            'seller_id',
             'status'
         ]);
         if (request()->get('discount')) $data['discount'] = $request->get('discount');
+        $data['seller_id'] = auth()->user()->id;
         $newProduct = Product::create($data);
         $newProduct->categories()->attach($request->get('category_ids'));
         if ($request->has('images')) {
