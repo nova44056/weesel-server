@@ -20,8 +20,6 @@ class Product extends Model
         'rating',
         'status',
     ];
-    protected $hidden = ['pivot'];
-
 
     public function seller()
     {

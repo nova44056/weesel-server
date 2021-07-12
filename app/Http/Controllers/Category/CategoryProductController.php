@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Category;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryProductController extends Controller
 {
@@ -16,9 +17,13 @@ class CategoryProductController extends Controller
     public function index(Category $category, Request $request)
     {
         $products = $category->products();
+        if ($request->query("seller_id")) {
+            $products = $products->where('seller_id', '=', 3);
+        }
+
         if ($request->query("categories")) {
             $categoriesFilter = explode(",", $request->query("categories"));
-            $products = $category->products()->whereHas('categories', function ($category) use ($categoriesFilter) {
+            $products = $products->whereHas('categories', function ($category) use ($categoriesFilter) {
                 $category->whereIn('id', $categoriesFilter);
             });
         }
@@ -50,10 +55,8 @@ class CategoryProductController extends Controller
                     break;
             }
         }
-
         $limit = $request->query('limit');
         $products = $products->paginate($limit);
-
         return response()->json([
             'data' => $products
         ], 200);

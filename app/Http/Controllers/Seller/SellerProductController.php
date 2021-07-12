@@ -6,15 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Seller;
 use Illuminate\Http\Request;
 
-class SellerController extends Controller
+class SellerProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Seller $seller)
     {
+        return response()->json([
+            'data' => $seller->products()->get()
+        ]);
     }
 
     /**

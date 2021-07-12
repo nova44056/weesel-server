@@ -22,11 +22,16 @@ class Order extends Model
     ];
     function products()
     {
-        return $this->belongsToMany(Product::class);
+        return $this->belongsToMany(Product::class, "order_product")->withPivot("order_product_quantity");
     }
 
-    function user()
+    function sellers()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(Seller::class);
+    }
+
+    function buyer()
+    {
+        return $this->belongsTo(Buyer::class);
     }
 }

@@ -10,29 +10,6 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $orders = Order::with("products", "user")->get();
-        return $reponse()->json([
-            'data' => $orders
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -40,6 +17,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        abort_if(Gate::denies("order_create"), 403);
         if ($request->get("user_id")) {
             $this->validate($request, [
                 'payment_method' => 'required|string',
@@ -84,10 +62,16 @@ class OrderController extends Controller
         }
 
         $order = Order::create($data);
+        $seller_ids = [];
         foreach ($request->get('products') as $product) {
             $order->products()->attach($product["id"], ['quantity' => $product["quantity"]]);
+            array_push($seller_ids, $product["seller_id"]);
         }
-        // $order->products()->attach($request->get('product_ids'));
+
+        $seller_ids = array_unique($seller_ids);
+        foreach ($seller_ids as $seller_id) {
+            $order->sellers()->attach($seller_id);
+        }
 
         return response()->json([
             'data' => $order

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -15,10 +17,13 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::all();
-        if ($role = $request->query('role') and in_array($request->query('role'), User::roles)) {
-            $users = User::where('role', '=', $role)->get();
+        $users = User::with('roles');
+        if ($role = $request->query('role')) {
+            $users = $users->whereHas('roles', function ($q) use ($role) {
+                $q->where('name', $role);
+            });
         }
+        $users = $users->get();
         return response()->json([
             'data' => $users
         ], 200);
@@ -32,15 +37,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:6|confirmed'
+        $newUserData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+            'phone_number' => 'required|string',
+            'address_1' => 'required|string',
+            'address_2' => 'nullable|string',
+            'city' => 'string|required',
+            'district' => 'string|required',
+            'role' => 'required|string'
         ]);
-
-        $user = User::create($request->all());
+        $newUserData['password'] = bcrypt($newUserData['password']);
+        $newUser = User::create($newUserData);
+        $newUser->assignRole($request->get('role'));
         return response()->json([
-            'data' => $user
+            'data' => $newUser
         ], 200);
     }
 
